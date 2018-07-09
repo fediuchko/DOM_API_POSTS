@@ -41,7 +41,7 @@ window.onload = function () {
 };
 var sortType;
 var tagsSet = new Set();
-var setOfTagsForSearch = new Set();
+var setOfTagsForSearch = [];
 
 function createNode(element, className) {
     let node = document.createElement(element);
@@ -50,6 +50,7 @@ function createNode(element, className) {
 }
 function createButton(buttonText, clickFunction) {
     var btn = document.createElement("BUTTON");
+    btn.className = "BUTTON"
     var t = document.createTextNode(buttonText);
     btn.appendChild(t);
     btn.addEventListener("click", clickFunction)
@@ -91,7 +92,6 @@ fetch(url)
         spanDescription = createNode('span', "description");
         spanDate = createNode('span', "date");
         ulTags = createNode('ul', "ulTags");
-        removeItemBtn = createButton("Remove", function () { li.parentNode.removeChild(li) });
 
         post.tags.map(tag=> {
             tagsSet.add(tag)
@@ -102,6 +102,8 @@ fetch(url)
             append(liTags, spanTag);
             append(ulTags, liTags);
         })
+        removeItemBtn = createButton("Remove", function () { li.parentNode.removeChild(li) });
+
         img.src = post.image;
         spanTitle.innerHTML = `${post.title} `;
         spanDescription.innerHTML = `${post.description} `;
@@ -111,10 +113,10 @@ fetch(url)
         append(li, spanTitle);
         append(li, spanDescription);
         append(li, spanDate);
-        append(li, liTags);
-        append(li, removeItemBtn)
         append(li, ulTags);
         append(ul, li);
+        append(li, removeItemBtn)
+
     })
     console.log(tagsSet)
     tagsSet.forEach(function (tag) {
@@ -125,11 +127,14 @@ fetch(url)
         let checkbox = createCheckBox(tag, function () {
             var check = document.getElementById(tag)
             if (check.checked) {
-                setOfTagsForSearch.add(tag);
+                setOfTagsForSearch=[]
+                setOfTagsForSearch.push(tag);
                 sortType = "byTag";
                 document.location.reload(true)
             } else {
-                setOfTagsForSearch.delete(tag);
+                while (setOfTagsForSearch.indexOf(tag) !== -1) {
+                    delete setOfTagsForSearch[setOfTagsForSearch.indexOf(tag)];
+                  }
                 if (setOfTagsForSearch.length > 0) { sortType = "byTag" } else { sortType = "" }
                 document.location.reload(true)
             }
@@ -162,15 +167,18 @@ function sortPostsIncrease() {
     return posts.sort((post1, post2) => { return ((new Date(post1.createdAt)).getUTCFullYear()) - (new Date(post2.createdAt)).getUTCFullYear() });
 }
 function sortPostsByTags() {
-    return posts.sort((post1, post2) => { return compare(post1, post2); });
+    let currentTag = setOfTagsForSearch[0];
+   var firstpartposts=[];
+   var secondpartposts=[];
+
+    posts.map(post=> {  
+        if(post.tags.includes(currentTag)){firstpartposts.push(post)}else{secondpartposts.push(post)} 
+    });
+    posts=[];
+    posts = firstpartposts.concat(secondpartposts);
+
 }
-function compare(post1, post2) {
-    if (post1.tags.contains(setOfTagsForSearch) && !post2.tags.contains(setOfTagsForSearch)) { return -1; }
-        
-    if (post2.tags.contains(setOfTagsForSearch) && !post1.tags.contains(setOfTagsForSearch))
-        return 1;
-    return 0;
-}
+
 
 function searchByTitle() {
     var input, filter, ul, li, a, i;
@@ -222,23 +230,6 @@ function decreaseClick() {
     sortPostsDecrease()
     document.location.reload(true)
 }
-// function searchByTitle() {
-//     var input, filter, ulTags, liTags, a, i;
-//     input = document.getElementById("searchInput");
-//     filter = input.value.toUpperCase();
-//     console.log(filter)
-//     ulTags = document.getElementByClassName("ulTags");
-//     liTags = ul.getElementsByTagName("liTags");
-//     for (i = 0; i < liTags.length; i++) {
-//         a = liTags[i].getElementsByTagName("a")[0];
-//         if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-//             liTags[i].style.display = "";
-//         } else {
-//             liTags[i].style.display = "none";
-//         }
-//     }
-// }
-
 
 
 

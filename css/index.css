@@ -17,8 +17,8 @@
 }
 
 ul{
-  padding: 0;
-  margin: 0;
+  padding: 4px;
+  margin: 6px;
 }
 
 ul .listItem {
@@ -28,6 +28,7 @@ ul .listItem {
   font-size: 18px;
   color: black;
   display: block
+  
 }
 
 ul .listItem:hover:not(.header) {
@@ -39,6 +40,7 @@ ul .listItem:hover:not(.header) {
     text-indent: 50px;
     letter-spacing: 3px;
     margin:auto;
+    padding: 4px
 }
 
 .listItem .title {
@@ -172,4 +174,12 @@ color:#282459
 .tags-list>li>a[data-tooltip]:hover:before {
   visibility: visible;
   opacity: 1;
+}
+.BUTTON{
+  background: rgb(209, 95, 95);
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  
 }
