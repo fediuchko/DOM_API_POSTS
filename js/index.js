@@ -175,6 +175,8 @@ function sortPostsByTags() {
         if(post.tags.includes(currentTag)){firstpartposts.push(post)}else{secondpartposts.push(post)} 
     });
     posts=[];
+    firstpartposts.sort((post1, post2) => { return ((new Date(post2.createdAt)).getUTCFullYear()) - (new Date(post1.createdAt)).getUTCFullYear() });
+    secondpartposts.sort((post1, post2) => { return ((new Date(post2.createdAt)).getUTCFullYear()) - (new Date(post1.createdAt)).getUTCFullYear() });
     posts = firstpartposts.concat(secondpartposts);
 
 }
